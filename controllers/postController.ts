@@ -10,6 +10,22 @@ const postController = (() => {
     res.status(200).json(posts);
   });
 
+  const get_post = asyncHandler(async (req, res, next) => {
+    try {
+      const post = await Post.findById(req.params.id).exec();
+
+      return res.status(200).json({
+        success: true,
+        post: post,
+      });
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        errors: err,
+      });
+    }
+  });
+
   const create_post = [
     // Validate and sanitise request body
     body("title", "Title is required").trim().notEmpty().escape(),
@@ -101,6 +117,7 @@ const postController = (() => {
 
   return {
     get_posts,
+    get_post,
     create_post,
     update_post,
     delete_post,
