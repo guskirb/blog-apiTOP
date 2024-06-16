@@ -66,7 +66,10 @@ const authController = (() => {
           expires: jwt.expires,
         });
       } catch (err) {
-        next(err);
+        return res.status(400).json({
+          success: false,
+          errors: err,
+        });
       }
     }),
   ];
@@ -114,17 +117,27 @@ const authController = (() => {
         });
       } else {
         // Find user in DB & issue JWT
-        const user = await User.findOne({
-          $or: [{ email: req.body.username }, { username: req.body.username }],
-        }).exec();
-        const jwt = issueJWT(user);
+        try {
+          const user = await User.findOne({
+            $or: [
+              { email: req.body.username },
+              { username: req.body.username },
+            ],
+          }).exec();
+          const jwt = issueJWT(user);
 
-        return res.status(200).json({
-          success: true,
-          user: user,
-          token: jwt.token,
-          expires: jwt.expires,
-        });
+          return res.status(200).json({
+            success: true,
+            user: user,
+            token: jwt.token,
+            expires: jwt.expires,
+          });
+        } catch (err) {
+          return res.status(400).json({
+            success: false,
+            errors: err,
+          });
+        }
       }
     }),
   ];

@@ -75,7 +75,7 @@ const postController = (() => {
           updatedPost,
           {}
         );
-        return res.status(201).json({
+        return res.status(200).json({
           success: true,
           post: post,
         });
@@ -83,10 +83,27 @@ const postController = (() => {
     }),
   ];
 
+  const delete_post = asyncHandler(async (req, res, next) => {
+    try {
+      await Post.findByIdAndDelete(req.params.id);
+
+      return res.status(200).json({
+        success: true,
+        msg: "Deleted successfully",
+      });
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        errors: err,
+      });
+    }
+  });
+
   return {
     get_posts,
     create_post,
     update_post,
+    delete_post,
   };
 })();
 
