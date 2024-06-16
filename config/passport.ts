@@ -27,7 +27,7 @@ const verify = async (username: string, password: string, done) => {
   }
 };
 
-const serialize = (user: object, done) => {
+const serialize = (user, done) => {
   done(null, user._id);
 };
 
@@ -42,8 +42,8 @@ const deserialize = async (id, done) => {
 
 function passportInitialize(passport) {
   passport.use(new LocalStrategy(customFields, verify));
-  passport.serialize(serialize);
-  passport.deserialize(deserialize);
+  passport.serializeUser(serialize);
+  passport.deserializeUser(deserialize);
 }
 
 export default passportInitialize;
