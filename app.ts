@@ -4,9 +4,13 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import mongoose from "mongoose";
+import passport from "passport";
+import passportInitialize from "./config/passport";
+
+passportInitialize(passport);
 
 mongoose.set("strictQuery", false);
-const mongoString: string = process.env.mongoDB!;
+const mongoString: string = process.env.MONGO_STRING!;
 
 main().catch((err) => console.log(err));
 async function main() {
