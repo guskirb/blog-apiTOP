@@ -5,9 +5,9 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import mongoose from "mongoose";
 import passport from "passport";
-import passportInitialize from "./config/passport";
+import jwtInitialize from "./config/authJWT";
 
-passportInitialize(passport);
+jwtInitialize(passport);
 
 mongoose.set("strictQuery", false);
 const mongoString: string = process.env.MONGO_STRING!;

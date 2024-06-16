@@ -21,6 +21,7 @@
     "mongoose": "^8.4.1",
     "morgan": "~1.9.1",
     "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "typescript": "^5.4.5"
   },
@@ -30,6 +31,7 @@
     "@types/cookie-parser": "^1.4.7",
     "@types/debug": "^4.1.12",
     "@types/morgan": "^1.9.9",
+    "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "concurrently": "^8.2.2",
     "eslint": "^9.5.0",
