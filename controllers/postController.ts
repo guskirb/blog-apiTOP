@@ -4,19 +4,22 @@ import { body, validationResult } from "express-validator";
 import Post from "../models/post";
 
 const postController = (() => {
-  const post_get = asyncHandler(async (req, res, next) => {
+  const get_posts = asyncHandler(async (req, res, next) => {
     const posts = await Post.find().exec();
 
     res.status(200).json(posts);
   });
 
-  const post_post = [
+  const create_post = [
+    // Validate and sanitise request body
     body("title", "Title is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
 
     asyncHandler(async (req, res, next) => {
+      // Check for errors
       const errors = validationResult(req);
 
+      // Return invalid if errors
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
@@ -31,11 +34,12 @@ const postController = (() => {
           author: req.user._id,
         });
 
-        await newPost.save();
+        // Save new post to DB
+        const post = await newPost.save();
 
         return res.status(201).json({
           success: true,
-          post: newPost,
+          post: post,
         });
       } catch (err) {
         next(err);
@@ -43,9 +47,46 @@ const postController = (() => {
     }),
   ];
 
+  const update_post = [
+    // Validate and sanitise request body
+    body("title", "Title is required").trim().notEmpty().escape(),
+    body("post", "A post is required").trim().notEmpty().escape(),
+
+    asyncHandler(async (req, res, next) => {
+      // Check for errors
+      const errors = validationResult(req);
+
+      const updatedPost = new Post({
+        title: req.body.title,
+        post: req.body.post,
+        _id: req.params.id,
+      });
+
+      // Return invalid if errors
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          errors: errors.array(),
+        });
+      } else {
+        // Save updated post to DB
+        const post = await Post.findByIdAndUpdate(
+          req.params.id,
+          updatedPost,
+          {}
+        );
+        return res.status(201).json({
+          success: true,
+          post: post,
+        });
+      }
+    }),
+  ];
+
   return {
-    post_get,
-    post_post,
+    get_posts,
+    create_post,
+    update_post,
   };
 })();
 

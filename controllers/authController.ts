@@ -49,14 +49,14 @@ const authController = (() => {
       try {
         // Encrypt password and create a new user object
         const hashedPass = await bcrypt.hash(req.body.password, 10);
-        const user = new User({
+        const newUser = new User({
           username: req.body.username,
           email: req.body.email,
           password: hashedPass,
           admin: false,
         });
         // Save user to DB & issue JWT
-        const newUser = await user.save();
+        const user = await newUser.save();
         const jwt = issueJWT(newUser);
 
         return res.status(201).json({
