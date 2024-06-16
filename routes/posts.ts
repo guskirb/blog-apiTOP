@@ -4,6 +4,6 @@ import postController from "../controllers/postController";
 
 router.get("/", postController.post_get);
 
-router.post("/");
+router.post("/", postController.post_post);
 
 export default router;

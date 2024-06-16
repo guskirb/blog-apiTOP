@@ -6,10 +6,11 @@ import logger from "morgan";
 import mongoose from "mongoose";
 
 mongoose.set("strictQuery", false);
+const mongoString: string = process.env.mongoDB!;
 
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(process.env.mongoDB);
+  await mongoose.connect(mongoString);
 }
 
 import indexRouter from "./routes/index";
