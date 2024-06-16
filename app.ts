@@ -6,6 +6,7 @@ import logger from "morgan";
 import mongoose from "mongoose";
 import passport from "passport";
 import jwtInitialize from "./config/authJWT";
+import userFromJWT from "./utils/userFromJWT";
 
 jwtInitialize(passport);
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(userFromJWT);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

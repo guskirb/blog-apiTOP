@@ -8,9 +8,7 @@ import User from "../models/user";
 const userFromJWT = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-      return res.status(403).json({
-        errors: "Authentication header missing",
-      });
+      return next();
     }
     const token = req.headers.authorization.split(" ")[1];
 
@@ -26,9 +24,7 @@ const userFromJWT = asyncHandler(
         return next();
       }
     } catch (err) {
-      return res.status(403).json({
-        errors: "Token cannot be found",
-      });
+      return next(err);
     }
   }
 );
