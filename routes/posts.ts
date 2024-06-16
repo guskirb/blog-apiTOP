@@ -1,6 +1,7 @@
 import express from "express";
-const router = express.Router();
 import postController from "../controllers/postController";
+
+const router = express.Router();
 
 /* GET posts listing. */
 router.get("/", postController.post_get);

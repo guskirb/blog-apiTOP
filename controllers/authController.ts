@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 
@@ -33,7 +34,7 @@ const authController = (() => {
       .withMessage("Password must contain at least 5 characters")
       .escape(),
 
-    asyncHandler(async (req, res, next) => {
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
       // Check for errors
       const errors = validationResult(req);
 
@@ -101,7 +102,7 @@ const authController = (() => {
       })
       .escape(),
 
-    asyncHandler(async (req, res, next) => {
+    asyncHandler(async (req: Request, res: Response) => {
       // Check for errors
       const errors = validationResult(req);
 
