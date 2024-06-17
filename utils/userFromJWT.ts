@@ -8,9 +8,9 @@ import User from "../models/user";
 const userFromJWT = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-      next();
+      return next();
     }
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.headers.authorization.split(" ")[1];
 
     try {
       const decoded = jsonwebtoken.verify(token, process.env.ACCESS_TOKEN);
@@ -18,13 +18,13 @@ const userFromJWT = asyncHandler(
       const user = await User.findById(decoded.sub);
 
       if (!user) {
-        next();
+        return next();
       } else {
         req.user = user;
-        next();
+        return next();
       }
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 );

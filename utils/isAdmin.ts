@@ -5,16 +5,18 @@ function isAdmin(req: Request, res: Response, next: NextFunction) {
     if (req.user?.admin) {
       return next();
     } else {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         errors: "Not authorized to access this route.",
       });
+      return;
     }
   } catch (err) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       errors: "Not authorized to access this route.",
     });
+    return;
   }
 }
 

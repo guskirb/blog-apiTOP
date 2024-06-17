@@ -82,45 +82,33 @@ const postController = (() => {
 
     asyncHandler(async (req: Request, res: Response) => {
       try {
-        const post = await Post.findById(req.params.id)
-          .populate("author")
-          .exec();
-        // Check if user is author or admin
-        if (post?.author.id === req.user?.id || req.user?.admin) {
-          // Check for errors
-          const errors = validationResult(req);
+        // Check for errors
+        const errors = validationResult(req);
 
-          const updatedPost = new Post({
-            title: req.body.title,
-            post: req.body.post,
-            _id: req.params.id,
-          });
+        const updatedPost = new Post({
+          title: req.body.title,
+          post: req.body.post,
+          _id: req.params.id,
+        });
 
-          // Return invalid if errors
-          if (!errors.isEmpty()) {
-            res.status(400).json({
-              success: false,
-              errors: errors.array(),
-            });
-            return;
-          } else {
-            // Save updated post to DB
-            const post = await Post.findByIdAndUpdate(
-              req.params.id,
-              updatedPost,
-              {}
-            );
-
-            res.status(200).json({
-              success: true,
-              post: post,
-            });
-            return;
-          }
-        } else {
-          res.status(401).json({
+        // Return invalid if errors
+        if (!errors.isEmpty()) {
+          res.status(400).json({
             success: false,
-            errors: "Not authorized to access this route.",
+            errors: errors.array(),
+          });
+          return;
+        } else {
+          // Save updated post to DB
+          const post = await Post.findByIdAndUpdate(
+            req.params.id,
+            updatedPost,
+            {}
+          );
+
+          res.status(200).json({
+            success: true,
+            post: post,
           });
           return;
         }
@@ -136,27 +124,17 @@ const postController = (() => {
 
   const delete_post = asyncHandler(async (req: Request, res: Response) => {
     try {
-      const post = await Post.findById(req.params.id).populate("author").exec();
-      // Check if user is author or admin
-      if (post?.author.id === req.user?.id || req.user?.admin) {
-        // Delete post and its comments by request params
-        await Promise.all([
-          Post.findByIdAndDelete(req.params.id),
-          Comment.deleteMany({ post: req.params.id }),
-        ]);
+      // Delete post and its comments by request params
+      await Promise.all([
+        Post.findByIdAndDelete(req.params.id),
+        Comment.deleteMany({ post: req.params.id }),
+      ]);
 
-        res.status(200).json({
-          success: true,
-          msg: "Deleted successfully",
-        });
-        return;
-      } else {
-        res.status(401).json({
-          success: false,
-          errors: "Not authorized to access this route.",
-        });
-        return;
-      }
+      res.status(200).json({
+        success: true,
+        msg: "Deleted successfully",
+      });
+      return;
     } catch (err) {
       res.status(400).json({
         success: false,

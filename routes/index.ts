@@ -6,7 +6,7 @@ const router = express.Router();
 /* GET home page. */
 router.get("/", isAdmin, function (req, res, next) {
   res.json({
-    msg: req.user,
+    msg: 'Welcome to the blog api!'
   });
 });
 

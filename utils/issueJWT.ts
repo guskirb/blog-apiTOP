@@ -4,11 +4,10 @@ import jsonwebtoken from "jsonwebtoken";
 function issueJWT(user) {
   const _id = user._id;
 
-  const expiresIn = "1d";
+  const expiresIn = "30m";
 
   const payload = {
     sub: _id,
-    iat: Date.now(),
   };
 
   const signedToken = jsonwebtoken.sign(payload, process.env.ACCESS_TOKEN, {
