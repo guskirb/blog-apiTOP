@@ -1,10 +1,11 @@
 import asyncHandler from "express-async-handler";
+import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
 
 import Post from "../models/post";
 
 const postController = (() => {
-  const get_posts = asyncHandler(async (req, res, next) => {
+  const get_posts = asyncHandler(async (req: Request, res: Response) => {
     // Get all posts from DB
     const posts = await Post.find().exec();
 
@@ -14,7 +15,7 @@ const postController = (() => {
     })
   });
 
-  const get_post = asyncHandler(async (req, res, next) => {
+  const get_post = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Get post from DB by request params 
       const post = await Post.findById(req.params.id).exec();
@@ -36,7 +37,7 @@ const postController = (() => {
     body("title", "Title is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
 
-    asyncHandler(async (req, res, next) => {
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
       // Check for errors
       const errors = validationResult(req);
 
@@ -73,7 +74,7 @@ const postController = (() => {
     body("title", "Title is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
 
-    asyncHandler(async (req, res, next) => {
+    asyncHandler(async (req: Request, res: Response) => {
       // Check for errors
       const errors = validationResult(req);
 
@@ -104,7 +105,7 @@ const postController = (() => {
     }),
   ];
 
-  const delete_post = asyncHandler(async (req, res, next) => {
+  const delete_post = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Delete post by request params
       await Post.findByIdAndDelete(req.params.id);

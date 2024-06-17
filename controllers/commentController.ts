@@ -1,10 +1,11 @@
 import asyncHandler from "express-async-handler";
+import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
 
 import Comment from "../models/comment";
 
 const commentController = (() => {
-  const get_comments = asyncHandler(async (req, res, next) => {
+  const get_comments = asyncHandler(async (req: Request, res: Response) => {
     try {
       const comments = await Comment.find({ post: req.params.id }).exec();
 
@@ -24,7 +25,7 @@ const commentController = (() => {
     // Validate and sanitise request body
     body("comment", "Enter a comment").trim().notEmpty().escape(),
 
-    asyncHandler(async (req, res, next) => {
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
       // Check for errors
       const errors = validationResult(req);
 
@@ -58,7 +59,7 @@ const commentController = (() => {
 
   return {
     get_comments,
-    create_comment
+    create_comment,
   };
 })();
 

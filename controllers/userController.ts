@@ -1,9 +1,10 @@
 import asyncHandler from "express-async-handler";
+import { Request, Response, NextFunction } from "express";
 
 import User from "../models/user";
 
 const userController = (() => {
-  const get_users = asyncHandler(async (req, res, next) => {
+  const get_users = asyncHandler(async (req: Request, res: Response) => {
     // Get all users from DB
     const users = await User.find().exec();
 
@@ -13,7 +14,7 @@ const userController = (() => {
     });
   });
 
-  const get_user = asyncHandler(async (req, res, next) => {
+  const get_user = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Get user from DB by request params
       const user = await User.findById(req.params.id).exec();
@@ -32,7 +33,7 @@ const userController = (() => {
 
   return {
     get_users,
-    get_user
+    get_user,
   };
 })();
 
