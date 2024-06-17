@@ -13,7 +13,7 @@ const userFromJWT = asyncHandler(
     const token = req.headers.authorization.split(" ")[1];
 
     try {
-      const decoded = jsonwebtoken.verify(token, process.env.ACCESS_TOKEN);
+      const decoded = jsonwebtoken.verify(token, process.env.ACCESS_TOKEN as string);
 
       const user = await User.findById(decoded.sub);
 

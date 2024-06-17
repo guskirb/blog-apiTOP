@@ -1,7 +1,7 @@
 import "dotenv/config";
 import jsonwebtoken from "jsonwebtoken";
 
-function issueJWT(user) {
+function issueJWT(user: any) {
   const _id = user._id;
 
   const expiresIn = "30m";
@@ -10,7 +10,7 @@ function issueJWT(user) {
     sub: _id,
   };
 
-  const signedToken = jsonwebtoken.sign(payload, process.env.ACCESS_TOKEN, {
+  const signedToken = jsonwebtoken.sign(payload, process.env.ACCESS_TOKEN as string, {
     expiresIn: expiresIn,
   });
 
