@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 import jwtInitialize from "./config/authJWT";
 import userFromJWT from "./utils/userFromJWT";
+import compression from "compression";
 
 jwtInitialize(passport);
 
@@ -24,6 +25,7 @@ import postsRouter from "./routes/posts";
 
 const app = express();
 
+app.use(compression());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
