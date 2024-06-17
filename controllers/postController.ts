@@ -5,13 +5,18 @@ import Post from "../models/post";
 
 const postController = (() => {
   const get_posts = asyncHandler(async (req, res, next) => {
+    // Get all posts from DB
     const posts = await Post.find().exec();
 
-    res.status(200).json(posts);
+    return res.status(200).json({
+      success: true,
+      posts: posts,
+    })
   });
 
   const get_post = asyncHandler(async (req, res, next) => {
     try {
+      // Get post from DB by request params 
       const post = await Post.findById(req.params.id).exec();
 
       return res.status(200).json({
@@ -101,6 +106,7 @@ const postController = (() => {
 
   const delete_post = asyncHandler(async (req, res, next) => {
     try {
+      // Delete post by request params
       await Post.findByIdAndDelete(req.params.id);
 
       return res.status(200).json({

@@ -2,16 +2,20 @@ import express from "express";
 import { Request, Response, NextFunction } from "express";
 import authController from "../controllers/authController";
 import passport = require("passport");
+import userController from "../controllers/userController";
 
 const router = express.Router();
 
-/* GET users listing. */
-router.get("/", function (req: Request, res: Response) {
-  res.send("respond with a resource");
-});
+// GET all users
+router.get("/", userController.get_users);
 
+// Get user
+router.get("/:id", userController.get_user);
+
+// POST new user
 router.post("/register", authController.register);
 
+// POST user details & login
 router.post("/login", authController.login);
 
 router.get(
