@@ -59,13 +59,25 @@ const commentController = (() => {
 
   const delete_comment = asyncHandler(async (req: Request, res: Response) => {
     try {
-      // Delete comment by request params
-      await Comment.findByIdAndDelete(req.params.commentId);
+      const comment = await Comment.findById(req.params.commentId).populate(
+        "author"
+      );
 
-      return res.status(200).json({
-        success: true,
-        msg: "Deleted successfully",
-      });
+      // Check if comment is users or if admin
+      if (comment?.author.id === req.user.id || req.user.admin) {
+        // Delete comment by request params
+        await Comment.findByIdAndDelete(req.params.commentId);
+
+        return res.status(200).json({
+          success: true,
+          msg: "Deleted successfully",
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          errors: "Not authorized to access this route.",
+        });
+      }
     } catch (err) {
       return res.status(400).json({
         success: false,
@@ -77,7 +89,7 @@ const commentController = (() => {
   return {
     get_comments,
     create_comment,
-    delete_comment
+    delete_comment,
   };
 })();
 
