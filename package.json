@@ -1,9 +1,6 @@
 {
   "name": "blog-apitop",
   "version": "0.0.0",
-  "engines": {
-    "node": ">=21.7.3"
-  },
   "private": true,
   "scripts": {
     "build": "npx tsc",
