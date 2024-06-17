@@ -1,7 +1,6 @@
 import express from "express";
 import postController from "../controllers/postController";
 import commentsRouter from "./comments";
-import isAdmin from "../utils/isAdmin";
 
 const router = express.Router();
 
@@ -18,7 +17,7 @@ router.get("/:id", postController.get_post);
 router.post("/:id/update", postController.update_post);
 
 // DELETE post
-router.post("/:id/delete", isAdmin, postController.delete_post);
+router.post("/:id/delete", postController.delete_post);
 
 // Nested comment route
 router.use("/:id/comments", commentsRouter);

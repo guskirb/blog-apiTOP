@@ -63,7 +63,7 @@ const commentController = (() => {
         "author"
       );
 
-      // Check if comment is users or if admin
+      // Check if user is author or admin
       if (comment?.author.id === req.user.id || req.user.admin) {
         // Delete comment by request params
         await Comment.findByIdAndDelete(req.params.commentId);

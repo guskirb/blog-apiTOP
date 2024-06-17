@@ -76,31 +76,47 @@ const postController = (() => {
     body("post", "A post is required").trim().notEmpty().escape(),
 
     asyncHandler(async (req: Request, res: Response) => {
-      // Check for errors
-      const errors = validationResult(req);
+      try {
+        const post = await Post.findById(req.params.id).populate("author").exec();
+        // Check if user is author or admin
+        if (post?.author.id === req.user.id || req.user.admin) {
+          // Check for errors
+          const errors = validationResult(req);
 
-      const updatedPost = new Post({
-        title: req.body.title,
-        post: req.body.post,
-        _id: req.params.id,
-      });
+          const updatedPost = new Post({
+            title: req.body.title,
+            post: req.body.post,
+            _id: req.params.id,
+          });
 
-      // Return invalid if errors
-      if (!errors.isEmpty()) {
+          // Return invalid if errors
+          if (!errors.isEmpty()) {
+            return res.status(400).json({
+              success: false,
+              errors: errors.array(),
+            });
+          } else {
+            // Save updated post to DB
+            const post = await Post.findByIdAndUpdate(
+              req.params.id,
+              updatedPost,
+              {}
+            );
+            return res.status(200).json({
+              success: true,
+              post: post,
+            });
+          }
+        } else {
+          return res.status(401).json({
+            success: false,
+            errors: "Not authorized to access this route.",
+          });
+        }
+      } catch (err) {
         return res.status(400).json({
           success: false,
-          errors: errors.array(),
-        });
-      } else {
-        // Save updated post to DB
-        const post = await Post.findByIdAndUpdate(
-          req.params.id,
-          updatedPost,
-          {}
-        );
-        return res.status(200).json({
-          success: true,
-          post: post,
+          errors: err,
         });
       }
     }),
@@ -108,16 +124,25 @@ const postController = (() => {
 
   const delete_post = asyncHandler(async (req: Request, res: Response) => {
     try {
-      // Delete post and its comments by request params
-      await Promise.all([
-        Post.findByIdAndDelete(req.params.id),
-        Comment.deleteMany({ post: req.params.id }),
-      ]);
+      const post = await Post.findById(req.params.id).populate("author").exec();
+      // Check if user is author or admin
+      if (post?.author.id === req.user.id || req.user.admin) {
+        // Delete post and its comments by request params
+        await Promise.all([
+          Post.findByIdAndDelete(req.params.id),
+          Comment.deleteMany({ post: req.params.id }),
+        ]);
 
-      return res.status(200).json({
-        success: true,
-        msg: "Deleted successfully",
-      });
+        return res.status(200).json({
+          success: true,
+          msg: "Deleted successfully",
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          errors: "Not authorized to access this route.",
+        });
+      }
     } catch (err) {
       return res.status(400).json({
         success: false,
