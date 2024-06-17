@@ -1,5 +1,6 @@
 import express from "express";
 import postController from "../controllers/postController";
+import commentsRouter from "./comments";
 
 const router = express.Router();
 
@@ -17,5 +18,7 @@ router.post("/:id/update", postController.update_post);
 
 // DELETE post
 router.post("/:id/delete", postController.delete_post);
+
+router.use("/:id/comments", commentsRouter);
 
 export default router;
