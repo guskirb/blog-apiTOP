@@ -9,15 +9,17 @@ const commentController = (() => {
     try {
       const comments = await Comment.find({ post: req.params.id }).exec();
 
-      return res.status(200).json({
+      res.status(200).json({
         success: true,
         comments: comments,
       });
+      return;
     } catch (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         errors: err,
       });
+      return;
     }
   });
 
@@ -31,15 +33,16 @@ const commentController = (() => {
 
       // Return invalid if errors
       if (!errors.isEmpty()) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           errors: errors.array(),
         });
+        return;
       }
 
       try {
         const newComment = new Comment({
-          author: req.user._id,
+          author: req.user?._id,
           post: req.params.id,
           comment: req.body.comment,
         });
@@ -47,10 +50,11 @@ const commentController = (() => {
         // Save new comment to DB
         const comment = await newComment.save();
 
-        return res.status(201).json({
+        res.status(201).json({
           success: true,
           comment: comment,
         });
+        return;
       } catch (err) {
         next(err);
       }
@@ -64,25 +68,28 @@ const commentController = (() => {
       );
 
       // Check if user is author or admin
-      if (comment?.author.id === req.user.id || req.user.admin) {
+      if (comment?.author.id === req.user?.id || req.user?.admin) {
         // Delete comment by request params
         await Comment.findByIdAndDelete(req.params.commentId);
 
-        return res.status(200).json({
+        res.status(200).json({
           success: true,
           msg: "Deleted successfully",
         });
+        return;
       } else {
-        return res.status(401).json({
+        res.status(401).json({
           success: false,
           errors: "Not authorized to access this route.",
         });
+        return;
       }
     } catch (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         errors: err,
       });
+      return;
     }
   });
 

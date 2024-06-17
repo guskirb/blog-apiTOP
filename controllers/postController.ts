@@ -10,10 +10,11 @@ const postController = (() => {
     // Get all posts from DB
     const posts = await Post.find().exec();
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       posts: posts,
     });
+    return;
   });
 
   const get_post = asyncHandler(async (req: Request, res: Response) => {
@@ -21,15 +22,17 @@ const postController = (() => {
       // Get post from DB by request params
       const post = await Post.findById(req.params.id).exec();
 
-      return res.status(200).json({
+      res.status(200).json({
         success: true,
         post: post,
       });
+      return;
     } catch (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         errors: err,
       });
+      return;
     }
   });
 
@@ -44,26 +47,28 @@ const postController = (() => {
 
       // Return invalid if errors
       if (!errors.isEmpty()) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           errors: errors.array(),
         });
+        return;
       }
 
       try {
         const newPost = new Post({
           title: req.body.title,
           post: req.body.post,
-          author: req.user._id,
+          author: req.user?._id,
         });
 
         // Save new post to DB
         const post = await newPost.save();
 
-        return res.status(201).json({
+        res.status(201).json({
           success: true,
           post: post,
         });
+        return;
       } catch (err) {
         next(err);
       }
@@ -77,9 +82,11 @@ const postController = (() => {
 
     asyncHandler(async (req: Request, res: Response) => {
       try {
-        const post = await Post.findById(req.params.id).populate("author").exec();
+        const post = await Post.findById(req.params.id)
+          .populate("author")
+          .exec();
         // Check if user is author or admin
-        if (post?.author.id === req.user.id || req.user.admin) {
+        if (post?.author.id === req.user?.id || req.user?.admin) {
           // Check for errors
           const errors = validationResult(req);
 
@@ -91,10 +98,11 @@ const postController = (() => {
 
           // Return invalid if errors
           if (!errors.isEmpty()) {
-            return res.status(400).json({
+            res.status(400).json({
               success: false,
               errors: errors.array(),
             });
+            return;
           } else {
             // Save updated post to DB
             const post = await Post.findByIdAndUpdate(
@@ -102,22 +110,26 @@ const postController = (() => {
               updatedPost,
               {}
             );
-            return res.status(200).json({
+
+            res.status(200).json({
               success: true,
               post: post,
             });
+            return;
           }
         } else {
-          return res.status(401).json({
+          res.status(401).json({
             success: false,
             errors: "Not authorized to access this route.",
           });
+          return;
         }
       } catch (err) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           errors: err,
         });
+        return;
       }
     }),
   ];
@@ -126,28 +138,31 @@ const postController = (() => {
     try {
       const post = await Post.findById(req.params.id).populate("author").exec();
       // Check if user is author or admin
-      if (post?.author.id === req.user.id || req.user.admin) {
+      if (post?.author.id === req.user?.id || req.user?.admin) {
         // Delete post and its comments by request params
         await Promise.all([
           Post.findByIdAndDelete(req.params.id),
           Comment.deleteMany({ post: req.params.id }),
         ]);
 
-        return res.status(200).json({
+        res.status(200).json({
           success: true,
           msg: "Deleted successfully",
         });
+        return;
       } else {
-        return res.status(401).json({
+        res.status(401).json({
           success: false,
           errors: "Not authorized to access this route.",
         });
+        return;
       }
     } catch (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         errors: err,
       });
+      return;
     }
   });
 

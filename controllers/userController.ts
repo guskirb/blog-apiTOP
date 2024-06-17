@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 import User from "../models/user";
 
@@ -8,10 +8,11 @@ const userController = (() => {
     // Get all users from DB
     const users = await User.find().exec();
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       users: users,
     });
+    return;
   });
 
   const get_user = asyncHandler(async (req: Request, res: Response) => {
@@ -19,15 +20,17 @@ const userController = (() => {
       // Get user from DB by request params
       const user = await User.findById(req.params.id).exec();
 
-      return res.status(200).json({
+      res.status(200).json({
         success: true,
         user: user,
       });
+      return;
     } catch (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         errors: err,
       });
+      return;
     }
   });
 

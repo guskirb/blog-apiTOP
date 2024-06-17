@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
   try {
-    if (req.user.admin) {
+    if (req.user?.admin) {
       return next();
     } else {
       return res.status(401).json({

@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 
@@ -34,16 +34,17 @@ const authController = (() => {
       .withMessage("Password must contain at least 5 characters")
       .escape(),
 
-    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    asyncHandler(async (req: Request, res: Response) => {
       // Check for errors
       const errors = validationResult(req);
 
       // Return invalid if errors
       if (!errors.isEmpty()) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           errors: errors.array(),
         });
+        return;
       }
 
       try {
@@ -59,17 +60,19 @@ const authController = (() => {
         const user = await newUser.save();
         const jwt = issueJWT(newUser);
 
-        return res.status(201).json({
+        res.status(201).json({
           success: true,
           user: user,
           token: jwt.token,
           expires: jwt.expires,
         });
+        return;
       } catch (err) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           errors: err,
         });
+        return;
       }
     }),
   ];
@@ -111,10 +114,11 @@ const authController = (() => {
 
       // Return invalid if errors
       if (!errors.isEmpty()) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           errors: errors.array(),
         });
+        return;
       } else {
         // Find user in DB & issue JWT
         try {
@@ -126,17 +130,19 @@ const authController = (() => {
           }).exec();
           const jwt = issueJWT(user);
 
-          return res.status(200).json({
+          res.status(200).json({
             success: true,
             user: user,
             token: jwt.token,
             expires: jwt.expires,
           });
+          return;
         } catch (err) {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             errors: err,
           });
+          return;
         }
       }
     }),
