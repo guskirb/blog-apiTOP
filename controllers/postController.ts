@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
 
 import Post from "../models/post";
+import Comment from "../models/comment";
 
 const postController = (() => {
   const get_posts = asyncHandler(async (req: Request, res: Response) => {
@@ -12,12 +13,12 @@ const postController = (() => {
     return res.status(200).json({
       success: true,
       posts: posts,
-    })
+    });
   });
 
   const get_post = asyncHandler(async (req: Request, res: Response) => {
     try {
-      // Get post from DB by request params 
+      // Get post from DB by request params
       const post = await Post.findById(req.params.id).exec();
 
       return res.status(200).json({
@@ -107,8 +108,11 @@ const postController = (() => {
 
   const delete_post = asyncHandler(async (req: Request, res: Response) => {
     try {
-      // Delete post by request params
-      await Post.findByIdAndDelete(req.params.id);
+      // Delete post and its comments by request params
+      await Promise.all([
+        Post.findByIdAndDelete(req.params.id),
+        Comment.deleteMany({ post: req.params.id }),
+      ]);
 
       return res.status(200).json({
         success: true,

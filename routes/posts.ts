@@ -19,6 +19,7 @@ router.post("/:id/update", postController.update_post);
 // DELETE post
 router.post("/:id/delete", postController.delete_post);
 
+// Nested comment route
 router.use("/:id/comments", commentsRouter);
 
 export default router;

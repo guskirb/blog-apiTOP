@@ -44,7 +44,7 @@ const commentController = (() => {
           comment: req.body.comment,
         });
 
-        // Save new post to DB
+        // Save new comment to DB
         const comment = await newComment.save();
 
         return res.status(201).json({
@@ -57,9 +57,27 @@ const commentController = (() => {
     }),
   ];
 
+  const delete_comment = asyncHandler(async (req: Request, res: Response) => {
+    try {
+      // Delete comment by request params
+      await Comment.findByIdAndDelete(req.params.commentId);
+
+      return res.status(200).json({
+        success: true,
+        msg: "Deleted successfully",
+      });
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        errors: err,
+      });
+    }
+  });
+
   return {
     get_comments,
     create_comment,
+    delete_comment
   };
 })();
 
