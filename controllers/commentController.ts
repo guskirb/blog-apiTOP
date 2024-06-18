@@ -4,16 +4,6 @@ import { body, validationResult } from "express-validator";
 
 import Comment from "../models/comment";
 
-declare global {
-  namespace Express {
-    interface User {
-      admin: boolean,
-      id?: Uint8Array,
-      _id: object,
-    }
-  }
-}
-
 const commentController = (() => {
   const get_comments = asyncHandler(async (req: Request, res: Response) => {
     try {
