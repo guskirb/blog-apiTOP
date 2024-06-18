@@ -4,7 +4,7 @@ import jsonwebtoken from "jsonwebtoken";
 function issueJWT(user: any) {
   const _id = user._id;
 
-  const expiresIn = "30m";
+  const expiresIn = "7d";
 
   const payload = {
     sub: _id,
