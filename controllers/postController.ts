@@ -8,7 +8,7 @@ import Comment from "../models/comment";
 const postController = (() => {
   const get_posts = asyncHandler(async (req: Request, res: Response) => {
     // Get all posts from DB
-    const posts = await Post.find().exec();
+    const posts = await Post.find().populate("author").exec();
 
     res.status(200).json({
       success: true,
@@ -38,7 +38,8 @@ const postController = (() => {
 
   const create_post = [
     // Validate and sanitise request body
-    body("title", "Title is required").trim().notEmpty().escape(),
+    body("title", "A title is required").trim().notEmpty().escape(),
+    body("image_url", "An image is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
 
     asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -57,6 +58,7 @@ const postController = (() => {
       try {
         const newPost = new Post({
           title: req.body.title,
+          image_url: req.body.image_url,
           post: req.body.post,
           author: req.user?._id,
         });
@@ -77,7 +79,8 @@ const postController = (() => {
 
   const update_post = [
     // Validate and sanitise request body
-    body("title", "Title is required").trim().notEmpty().escape(),
+    body("title", "A Title is required").trim().notEmpty().escape(),
+    body("image_url", "An image is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
 
     asyncHandler(async (req: Request, res: Response) => {
@@ -87,6 +90,7 @@ const postController = (() => {
 
         const updatedPost = new Post({
           title: req.body.title,
+          image_url: req.body.image_url,
           post: req.body.post,
           _id: req.params.id,
         });
