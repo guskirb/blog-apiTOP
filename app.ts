@@ -8,6 +8,7 @@ import passport from "passport";
 import jwtInitialize from "./config/authJWT";
 import userFromJWT from "./utils/userFromJWT";
 import compression from "compression";
+import cors from "cors";
 
 jwtInitialize(passport);
 
@@ -25,6 +26,7 @@ import postsRouter from "./routes/posts";
 
 const app = express();
 
+app.use(cors());
 app.use(compression());
 app.use(logger("dev"));
 app.use(express.json());
