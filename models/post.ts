@@ -18,7 +18,7 @@ const PostSchema = new Schema(
 
 PostSchema.virtual('date_formatted').get(function() {
   return  DateTime.fromJSDate(this.date).toFormat('MMMM dd, yyyy');
-})
+});
 
 const PostModel = mongoose.model("Post", PostSchema);
 export default PostModel;
