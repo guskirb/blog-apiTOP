@@ -8,7 +8,7 @@ import Comment from "../models/comment";
 const postController = (() => {
   const get_posts = asyncHandler(async (req: Request, res: Response) => {
     // Get all posts from DB
-    const posts = await Post.find().populate("author").exec();
+    const posts = await Post.find().sort({ _id: -1 }).populate("author").exec();
 
     res.status(200).json({
       success: true,
