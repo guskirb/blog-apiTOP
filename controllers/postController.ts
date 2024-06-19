@@ -20,7 +20,7 @@ const postController = (() => {
   const get_post = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Get post from DB by request params
-      const post = await Post.findById(req.params.id).exec();
+      const post = await Post.findById(req.params.id).populate("author").exec();
 
       res.status(200).json({
         success: true,
