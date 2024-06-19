@@ -20,5 +20,9 @@ PostSchema.virtual("date_formatted").get(function () {
   return DateTime.fromJSDate(this.date).toISODate(DateTime.DATE_FULL);
 });
 
+PostSchema.virtual('date_formatted').get(function() {
+  return  DateTime.fromJSDate(this.date).toISODate(DateTime.DATE_FULL);
+})
+
 const PostModel = mongoose.model("Post", PostSchema);
 export default PostModel;
