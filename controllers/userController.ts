@@ -44,6 +44,7 @@ const userController = (() => {
   const get_me = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Get user from DB by request params
+      console.log(req.user)
       const user = await User.findById(req.user.id).exec();
       res.status(200).json({
         success: true,

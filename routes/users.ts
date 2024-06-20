@@ -10,9 +10,6 @@ const router = express.Router();
 // GET all users
 router.get("/", isAdmin, userController.get_users);
 
-// GET user by id
-router.get("/:id", userController.get_user);
-
 // GET user by token
 router.get(
   "/me",
@@ -41,5 +38,8 @@ router.get(
     });
   }
 );
+
+// GET user by id
+router.get("/:id", userController.get_user);
 
 export default router;
