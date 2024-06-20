@@ -41,9 +41,28 @@ const userController = (() => {
     }
   });
 
+  const get_me = asyncHandler(async (req: Request, res: Response) => {
+    try {
+      // Get user from DB by request params
+      const user = await User.findById(req.user.id).exec();
+      res.status(200).json({
+        success: true,
+        user: user,
+      });
+      return;
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        errors: err,
+      });
+      return;
+    }
+  });
+
   return {
     get_users,
     get_user,
+    get_me,
   };
 })();
 

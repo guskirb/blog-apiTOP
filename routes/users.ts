@@ -13,6 +13,13 @@ router.get("/", isAdmin, userController.get_users);
 // GET user by id
 router.get("/:id", userController.get_user);
 
+// GET user by token
+router.get(
+  "/me",
+  passport.authenticate("jwt", { session: false }),
+  userController.get_me
+);
+
 // POST new user
 router.post("/register", authController.register);
 
@@ -34,8 +41,5 @@ router.get(
     });
   }
 );
-
-// Get user
-router.get("/:id", userController.get_user);
 
 export default router;
