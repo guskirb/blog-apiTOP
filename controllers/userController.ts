@@ -19,12 +19,19 @@ const userController = (() => {
     try {
       // Get user from DB by request params
       const user = await User.findById(req.params.id).exec();
-
-      res.status(200).json({
-        success: true,
-        user: user,
-      });
-      return;
+      if (user?.id === req.user?.id || req.user?.admin) {
+        res.status(200).json({
+          success: true,
+          user: user,
+        });
+        return;
+      } else {
+        res.status(401).json({
+          success: false,
+          errors: "Not authorized to access this route.",
+        });
+        return;
+      }
     } catch (err) {
       res.status(400).json({
         success: false,

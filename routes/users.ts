@@ -10,20 +10,20 @@ const router = express.Router();
 // GET all users
 router.get("/", isAdmin, userController.get_users);
 
+// GET user by id
+router.get("/:id", userController.get_user);
+
 // POST new user
 router.post("/register", authController.register);
 
 // POST user details & login
 router.post("/login", authController.login);
 
-router.get(
-  "/login-failed",
-  function (req: Request, res: Response) {
-    res.status(401).json({
-      error: "Login failed",
-    });
-  }
-);
+router.get("/login-failed", function (req: Request, res: Response) {
+  res.status(401).json({
+    error: "Login failed",
+  });
+});
 
 router.get(
   "/protected",
