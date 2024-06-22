@@ -58,6 +58,7 @@ const postController = (() => {
     body("title", "A title is required").trim().notEmpty().escape(),
     body("image_url", "An image is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
+    body("public").isBoolean(),
 
     asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
       // Check for errors
@@ -77,6 +78,7 @@ const postController = (() => {
           title: req.body.title,
           image_url: req.body.image_url,
           post: req.body.post,
+          public: req.body.public,
           author: req.user?._id,
         });
 
@@ -99,6 +101,7 @@ const postController = (() => {
     body("title", "A Title is required").trim().notEmpty().escape(),
     body("image_url", "An image is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
+    body("public").isBoolean(),
 
     asyncHandler(async (req: Request, res: Response) => {
       try {
@@ -109,6 +112,7 @@ const postController = (() => {
           title: req.body.title,
           image_url: req.body.image_url,
           post: req.body.post,
+          public: req.body.public,
           _id: req.params.id,
         });
 
