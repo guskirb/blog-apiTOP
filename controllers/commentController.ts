@@ -7,7 +7,10 @@ import Comment from "../models/comment";
 const commentController = (() => {
   const get_comments = asyncHandler(async (req: Request, res: Response) => {
     try {
-      const comments = await Comment.find({ post: req.params.id }).exec();
+      const comments = await Comment.find({ post: req.params.id })
+        .sort({ _id: -1 })
+        .populate("author")
+        .exec();
 
       res.status(200).json({
         success: true,
