@@ -8,7 +8,24 @@ import Comment from "../models/comment";
 const postController = (() => {
   const get_posts = asyncHandler(async (req: Request, res: Response) => {
     // Get all posts from DB
-    const posts = await Post.find().sort({ _id: -1 }).populate("author").exec();
+    const posts = await Post.find({ public: true })
+      .sort({ _id: -1 })
+      .populate("author")
+      .exec();
+
+    res.status(200).json({
+      success: true,
+      posts: posts,
+    });
+    return;
+  });
+
+  const get_private = asyncHandler(async (req: Request, res: Response) => {
+    // Get all posts from DB
+    const posts = await Post.find({ public: false })
+      .sort({ _id: -1 })
+      .populate("author")
+      .exec();
 
     res.status(200).json({
       success: true,
@@ -150,6 +167,7 @@ const postController = (() => {
 
   return {
     get_posts,
+    get_private,
     get_post,
     create_post,
     update_post,

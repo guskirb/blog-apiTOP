@@ -5,8 +5,11 @@ import isAdmin from "../utils/isAdmin";
 
 const router = express.Router();
 
-// GET all posts
+// GET all public posts
 router.get("/", postController.get_posts);
+
+// GET all private posts
+router.get("/private", isAdmin, postController.get_private);
 
 // POST new post
 router.post("/", isAdmin, postController.create_post);

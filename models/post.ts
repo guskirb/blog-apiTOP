@@ -9,6 +9,7 @@ const PostSchema = new Schema(
     post: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, default: Date.now },
+    public: { type: Boolean, default: true },
   },
   {
     toObject: { virtuals: true },
@@ -16,8 +17,8 @@ const PostSchema = new Schema(
   }
 );
 
-PostSchema.virtual('date_formatted').get(function() {
-  return  DateTime.fromJSDate(this.date).toFormat('MMMM dd, yyyy');
+PostSchema.virtual("date_formatted").get(function () {
+  return DateTime.fromJSDate(this.date).toFormat("MMMM dd, yyyy");
 });
 
 const PostModel = mongoose.model("Post", PostSchema);
