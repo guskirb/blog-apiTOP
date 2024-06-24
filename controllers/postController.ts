@@ -34,6 +34,21 @@ const postController = (() => {
     return;
   });
 
+  const get_recent = asyncHandler(async (req: Request, res: Response) => {
+    // Get recent posts from DB
+    const posts = await Post.find({ public: true })
+      .sort({ _id: -1 })
+      .populate("author")
+      .limit(4)
+      .exec();
+
+    res.status(200).json({
+      success: true,
+      posts: posts,
+    });
+    return;
+  });
+
   const get_post = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Get post from DB by request params
@@ -176,6 +191,7 @@ const postController = (() => {
   return {
     get_posts,
     get_private,
+    get_recent,
     get_post,
     create_post,
     update_post,

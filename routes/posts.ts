@@ -11,6 +11,9 @@ router.get("/", postController.get_posts);
 // GET all private posts
 router.get("/private", isAdmin, postController.get_private);
 
+// GET recent posts
+router.get("/recent", postController.get_recent);
+
 // POST new post
 router.post("/", isAdmin, postController.create_post);
 
