@@ -59,6 +59,7 @@ const postController = (() => {
     body("image_url", "An image is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
     body("public").isBoolean(),
+    body("category", "A category is required").trim().notEmpty().escape(),
 
     asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
       // Check for errors
@@ -80,6 +81,7 @@ const postController = (() => {
           post: req.body.post,
           public: req.body.public,
           author: req.user?._id,
+          category: req.body.category,
         });
 
         // Save new post to DB
@@ -102,6 +104,7 @@ const postController = (() => {
     body("image_url", "An image is required").trim().notEmpty().escape(),
     body("post", "A post is required").trim().notEmpty().escape(),
     body("public").isBoolean(),
+    body("category", "A category is required").trim().notEmpty().escape(),
 
     asyncHandler(async (req: Request, res: Response) => {
       try {
@@ -113,6 +116,7 @@ const postController = (() => {
           image_url: req.body.image_url,
           post: req.body.post,
           public: req.body.public,
+          category: req.body.category,
           _id: req.params.id,
         });
 

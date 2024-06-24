@@ -10,6 +10,7 @@ const PostSchema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, default: Date.now },
     public: { type: Boolean, default: true },
+    category: { type: String, required: true },
   },
   {
     toObject: { virtuals: true },
