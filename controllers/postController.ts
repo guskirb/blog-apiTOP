@@ -188,6 +188,27 @@ const postController = (() => {
     }
   });
 
+  const get_category = asyncHandler(async (req: Request, res: Response) => {
+    try {
+      // Get post from DB by request params
+      const posts = await Post.find({ category: req.params.category })
+        .populate("author")
+        .exec();
+
+      res.status(200).json({
+        success: true,
+        posts: posts,
+      });
+      return;
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        errors: err,
+      });
+      return;
+    }
+  });
+
   return {
     get_posts,
     get_private,
@@ -196,6 +217,7 @@ const postController = (() => {
     create_post,
     update_post,
     delete_post,
+    get_category,
   };
 })();
 
