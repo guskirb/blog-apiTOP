@@ -196,7 +196,7 @@ const postController = (() => {
       })
         .populate("author")
         .exec();
-      console.log(posts);
+      
       res.status(200).json({
         success: true,
         posts: posts,
