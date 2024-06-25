@@ -191,10 +191,12 @@ const postController = (() => {
   const get_category = asyncHandler(async (req: Request, res: Response) => {
     try {
       // Get post from DB by request params
-      const posts = await Post.find({ category: req.params.category })
+      const posts = await Post.find({
+        category: { $regex: new RegExp(req.params.category, "i") },
+      })
         .populate("author")
         .exec();
-
+      console.log(posts);
       res.status(200).json({
         success: true,
         posts: posts,
