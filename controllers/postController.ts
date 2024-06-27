@@ -7,17 +7,70 @@ import Comment from "../models/comment";
 
 const postController = (() => {
   const get_posts = asyncHandler(async (req: Request, res: Response) => {
-    // Get all posts from DB
-    const posts = await Post.find({ public: true })
-      .sort({ _id: -1 })
-      .populate("author")
-      .exec();
-
-    res.status(200).json({
+    const results: any = {
       success: true,
-      posts: posts,
-    });
-    return;
+    };
+    try {
+      // Paginate posts if request queries are present
+      if (req.query.page && req.query.limit) {
+        const page: number = parseInt(req.query.page as string);
+        const limit: number = parseInt(req.query.limit as string);
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        // Get posts from DB
+        const posts = await Post.find({
+          public: true,
+          category: { $regex: new RegExp(req.query.category as string, "i") },
+        })
+          .sort({ _id: -1 })
+          .limit(limit)
+          .skip(startIndex)
+          .populate("author")
+          .exec();
+
+        const postCount = await Post.countDocuments({
+          public: true,
+          category: { $regex: new RegExp(req.query.category as string, "i") },
+        }).exec();
+
+        if (endIndex < postCount) {
+          results.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          results.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+
+        results.total = Math.ceil(postCount / limit);
+        results.posts = posts;
+      } else {
+        // Get posts from DB
+        const posts = await Post.find({
+          public: true,
+          category: { $regex: new RegExp(req.query.category as string, "i") },
+        })
+          .sort({ _id: -1 })
+          .populate("author")
+          .exec();
+
+        results.posts = posts;
+      }
+      res.status(200).json(results);
+      return;
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        errors: err,
+      });
+      return;
+    }
   });
 
   const get_private = asyncHandler(async (req: Request, res: Response) => {
@@ -188,29 +241,6 @@ const postController = (() => {
     }
   });
 
-  const get_category = asyncHandler(async (req: Request, res: Response) => {
-    try {
-      // Get post from DB by request params
-      const posts = await Post.find({
-        category: { $regex: new RegExp(req.params.category, "i") },
-      })
-        .populate("author")
-        .exec();
-      console.log(posts);
-      res.status(200).json({
-        success: true,
-        posts: posts,
-      });
-      return;
-    } catch (err) {
-      res.status(400).json({
-        success: false,
-        errors: err,
-      });
-      return;
-    }
-  });
-
   return {
     get_posts,
     get_private,
@@ -219,7 +249,6 @@ const postController = (() => {
     create_post,
     update_post,
     delete_post,
-    get_category,
   };
 })();
 

@@ -17,9 +17,6 @@ router.get("/recent", postController.get_recent);
 // POST new post
 router.post("/", isAdmin, postController.create_post);
 
-// GET post by category
-router.get("/category/:category", postController.get_category);
-
 // GET post
 router.get("/:id", postController.get_post);
 
