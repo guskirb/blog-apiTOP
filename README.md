@@ -1,4 +1,4 @@
-# Blog Application Client
+# Blog Application API
 This is the backend of the blog application.
 ## Links
 * [Live Demo](https://main--guskirb-blog.netlify.app/) (It may take a moment to load due to the API host wake up time.)
