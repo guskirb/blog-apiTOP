@@ -1,5 +1,5 @@
 # Blog Application API
-This is the backend of the blog application.
+This is the backend of the blog application. It's a stateless RESTful API that allows for CRUD operations to be performed on the models.
 ## Links
 * [Live Demo](https://main--guskirb-blog.netlify.app/) (It may take a moment to load due to the API host wake up time.)
 * [Frontend Repository](https://github.com/guskirb/blog-clientTOP)
