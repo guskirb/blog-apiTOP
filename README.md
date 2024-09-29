@@ -8,6 +8,7 @@ This is the backend of the blog application. It's a stateless RESTful API that a
 * Passport JWT authentication and authorization.
 * Admin and user protected routes.
 * Optional pagination and categorization for Posts JSON responses.
+* Uses Express async handler middleware to catch errors.
 ## Project Stack
 Frontend: <br>
 [![My Skills](https://skillicons.dev/icons?i=ts,css,react,vite)](https://skillicons.dev)<br>
